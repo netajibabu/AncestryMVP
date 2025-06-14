@@ -1,0 +1,194 @@
+openapi: 3.0.0
+info:
+  title: Ancestry MVP API Documentation
+  version: 1.0.0
+  description: API documentation for Ancestry MVP backend
+
+servers:
+  - url: http://localhost:5000
+    description: Development server
+
+paths:
+  /test:
+    get:
+      summary: Test endpoint to verify server is running
+      tags:
+        - Test
+      responses:
+        '200':
+          description: Server is running successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Backend server is running!
+
+  /person:
+    get:
+      summary: Get all persons
+      tags:
+        - Person
+      responses:
+        '200':
+          description: List of persons retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    first_name:
+                      type: string
+                      example: John
+                    last_name:
+                      type: string
+                      example: Doe
+                    created_at:
+                      type: string
+                      format: date-time
+                      example: "2024-03-20T10:00:00Z"
+                    updated_at:
+                      type: string
+                      format: date-time
+                      example: "2024-03-20T10:00:00Z"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Failed to fetch persons
+
+    post:
+      summary: Insert a new person
+      tags:
+        - Person
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - firstName
+                - lastName
+              properties:
+                firstName:
+                  type: string
+                  example: John
+                lastName:
+                  type: string
+                  example: Doe
+      responses:
+        '201':
+          description: Person created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  first_name:
+                    type: string
+                    example: John
+                  last_name:
+                    type: string
+                    example: Doe
+                  created_at:
+                    type: string
+                    format: date-time
+                    example: "2024-03-20T10:00:00Z"
+                  updated_at:
+                    type: string
+                    format: date-time
+                    example: "2024-03-20T10:00:00Z"
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: First name and last name are required
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Failed to insert person
+
+  /person/filter:
+    post:
+      summary: Filter persons by first name and/or last name
+      tags:
+        - Person
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                  description: Filter by first name (case-insensitive partial match)
+                  example: John
+                lastName:
+                  type: string
+                  description: Filter by last name (case-insensitive partial match)
+                  example: Doe
+      responses:
+        '200':
+          description: Filtered list of persons retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    first_name:
+                      type: string
+                      example: John
+                    last_name:
+                      type: string
+                      example: Doe
+                    created_at:
+                      type: string
+                      format: date-time
+                      example: "2024-03-20T10:00:00Z"
+                    updated_at:
+                      type: string
+                      format: date-time
+                      example: "2024-03-20T10:00:00Z"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Failed to filter persons 
