@@ -9,7 +9,7 @@ servers:
     description: Development server
 
 paths:
-  /test:
+  /api/test:
     get:
       summary: Test endpoint to verify server is running
       tags:
@@ -26,11 +26,11 @@ paths:
                     type: string
                     example: Backend server is running!
 
-  /person:
+  /api/persons:
     get:
       summary: Get all persons
       tags:
-        - Person
+        - Persons
       responses:
         '200':
           description: List of persons retrieved successfully
@@ -72,7 +72,7 @@ paths:
     post:
       summary: Insert a new person
       tags:
-        - Person
+        - Persons
       requestBody:
         required: true
         content:
@@ -80,13 +80,13 @@ paths:
             schema:
               type: object
               required:
-                - firstName
-                - lastName
+                - first_name
+                - last_name
               properties:
-                firstName:
+                first_name:
                   type: string
                   example: John
-                lastName:
+                last_name:
                   type: string
                   example: Doe
       responses:
@@ -135,7 +135,7 @@ paths:
                     type: string
                     example: Failed to insert person
 
-  /person/filter:
+  /api/persons/filter:
     post:
       summary: Filter persons by first name and/or last name
       tags:
@@ -147,11 +147,11 @@ paths:
             schema:
               type: object
               properties:
-                firstName:
+                first_name:
                   type: string
                   description: Filter by first name (case-insensitive partial match)
                   example: John
-                lastName:
+                last_name:
                   type: string
                   description: Filter by last name (case-insensitive partial match)
                   example: Doe

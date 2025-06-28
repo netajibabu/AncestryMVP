@@ -21,8 +21,8 @@ app.use(morgan('dev'));
 // Import routes
 const routes = require('./routes');
 
-// Use routes
-app.use(routes);
+// Use routes with /api prefix
+app.use('/api', routes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

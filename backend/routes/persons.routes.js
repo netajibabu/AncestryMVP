@@ -18,22 +18,22 @@ router.get('/', async (req, res) => {
 // Filter persons by name
 router.post('/filter', async (req, res) => {
   try {
-    const { firstName, lastName } = req.body;
+    const { first_name, last_name } = req.body;
     
     // Build the query based on provided filters
     let query = 'SELECT * FROM persons WHERE 1=1';
     const params = [];
     let paramCount = 1;
 
-    if (firstName) {
+    if (first_name) {
       query += ` AND first_name ILIKE $${paramCount}`;
-      params.push(`%${firstName}%`);
+      params.push(`%${first_name}%`);
       paramCount++;
     }
 
-    if (lastName) {
+    if (last_name) {
       query += ` AND last_name ILIKE $${paramCount}`;
-      params.push(`%${lastName}%`);
+      params.push(`%${last_name}%`);
       paramCount++;
     }
 
@@ -52,10 +52,10 @@ router.post('/filter', async (req, res) => {
 // Insert new person
 router.post('/', async (req, res) => {
   try {
-    const { firstName, lastName } = req.body;
+    const { first_name, last_name } = req.body;
 
     // Validate input
-    if (!firstName || !lastName) {
+    if (!first_name || !last_name) {
       return res.status(400).json({ 
         error: 'First name and last name are required' 
       });
@@ -64,7 +64,7 @@ router.post('/', async (req, res) => {
     // Insert person into database
     const result = await db.query(
       'INSERT INTO persons (first_name, last_name) VALUES ($1, $2) RETURNING *',
-      [firstName, lastName]
+      [first_name, last_name]
     );
 
     res.status(201).json(result.rows[0]);
