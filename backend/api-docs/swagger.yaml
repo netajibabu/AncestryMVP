@@ -50,6 +50,14 @@ paths:
                     last_name:
                       type: string
                       example: Doe
+                    father_id:
+                      type: integer
+                      nullable: true
+                      example: 2
+                    mother_id:
+                      type: integer
+                      nullable: true
+                      example: 3
                     created_at:
                       type: string
                       format: date-time
@@ -89,6 +97,16 @@ paths:
                 last_name:
                   type: string
                   example: Doe
+                father_id:
+                  type: integer
+                  nullable: true
+                  description: ID of the person's father
+                  example: 2
+                mother_id:
+                  type: integer
+                  nullable: true
+                  description: ID of the person's mother
+                  example: 3
       responses:
         '201':
           description: Person created successfully
@@ -106,6 +124,14 @@ paths:
                   last_name:
                     type: string
                     example: Doe
+                  father_id:
+                    type: integer
+                    nullable: true
+                    example: 2
+                  mother_id:
+                    type: integer
+                    nullable: true
+                    example: 3
                   created_at:
                     type: string
                     format: date-time
@@ -134,6 +160,89 @@ paths:
                   error:
                     type: string
                     example: Failed to insert person
+
+  /api/persons/{id}:
+    get:
+      summary: Get a person by ID with parent information
+      tags:
+        - Persons
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Person ID
+          example: 1
+      responses:
+        '200':
+          description: Person retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  first_name:
+                    type: string
+                    example: John
+                  last_name:
+                    type: string
+                    example: Doe
+                  father_id:
+                    type: integer
+                    nullable: true
+                    example: 2
+                  mother_id:
+                    type: integer
+                    nullable: true
+                    example: 3
+                  father_first_name:
+                    type: string
+                    nullable: true
+                    example: Robert
+                  father_last_name:
+                    type: string
+                    nullable: true
+                    example: Doe
+                  mother_first_name:
+                    type: string
+                    nullable: true
+                    example: Mary
+                  mother_last_name:
+                    type: string
+                    nullable: true
+                    example: Smith
+                  created_at:
+                    type: string
+                    format: date-time
+                    example: "2024-03-20T10:00:00Z"
+                  updated_at:
+                    type: string
+                    format: date-time
+                    example: "2024-03-20T10:00:00Z"
+        '404':
+          description: Person not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Person not found
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Failed to fetch person
 
   /api/persons/filter:
     post:
@@ -174,6 +283,14 @@ paths:
                     last_name:
                       type: string
                       example: Doe
+                    father_id:
+                      type: integer
+                      nullable: true
+                      example: 2
+                    mother_id:
+                      type: integer
+                      nullable: true
+                      example: 3
                     created_at:
                       type: string
                       format: date-time

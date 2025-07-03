@@ -20,6 +20,8 @@ pool.connect((err, client, release) => {
         id SERIAL PRIMARY KEY,
         first_name VARCHAR(100) NOT NULL,
         last_name VARCHAR(100) NOT NULL,
+        father_id INTEGER REFERENCES persons(id),
+        mother_id INTEGER REFERENCES persons(id),
         created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
       );
