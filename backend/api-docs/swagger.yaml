@@ -377,4 +377,37 @@ paths:
                 properties:
                   error:
                     type: string
-                    example: Failed to delete person 
+                    example: Failed to delete person
+
+  /api/persons/bulk:
+    post:
+      summary: Add multiple people at once
+      tags:
+        - Persons
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Person'
+      responses:
+        '201':
+          description: People created successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Person'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Request body must be a non-empty array of people. 

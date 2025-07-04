@@ -70,4 +70,18 @@ router.post('/filter', async (req, res) => {
   }
 });
 
+// Add multiple people at once
+router.post('/bulk', async (req, res) => {
+  try {
+    const people = req.body;
+    if (!Array.isArray(people) || people.length === 0) {
+      return res.status(400).json({ error: 'Request body must be a non-empty array of people.' });
+    }
+    const inserted = await Person.insertMany(people);
+    res.status(201).json(inserted);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
 module.exports = router; 
