@@ -9,15 +9,15 @@
     "init-db": "node db/init-db.js"
   },
   "dependencies": {
-    "express": "^4.18.2",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "mongoose": "^8.16.1",
     "morgan": "^1.10.0",
     "swagger-ui-express": "^5.0.0",
-    "yamljs": "^0.3.0",
-    "pg": "^8.11.3"
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "nodemon": "^3.0.2"
   }
-} 
+}

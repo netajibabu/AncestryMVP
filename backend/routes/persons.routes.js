@@ -1,78 +1,72 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../config/database');
+const Person = require('../models/person');
+
+// Create a new person
+router.post('/', async (req, res) => {
+  try {
+    const person = new Person(req.body);
+    const savedPerson = await person.save();
+    res.status(201).json(savedPerson);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
 
 // Get all persons
 router.get('/', async (req, res) => {
   try {
-    const result = await db.query('SELECT * FROM persons ORDER BY created_at DESC');
-    res.json(result.rows);
-  } catch (error) {
-    console.error('Error fetching persons:', error);
-    res.status(500).json({ 
-      error: 'Failed to fetch persons' 
-    });
+    const persons = await Person.find();
+    res.json(persons);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 
-// Filter persons by name
+// Get a person by ID
+router.get('/:id', async (req, res) => {
+  try {
+    const person = await Person.findById(req.params.id);
+    if (!person) return res.status(404).json({ error: 'Person not found' });
+    res.json(person);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Update a person by ID
+router.put('/:id', async (req, res) => {
+  try {
+    const updatedPerson = await Person.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+    if (!updatedPerson) return res.status(404).json({ error: 'Person not found' });
+    res.json(updatedPerson);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// Delete a person by ID
+router.delete('/:id', async (req, res) => {
+  try {
+    const deletedPerson = await Person.findByIdAndDelete(req.params.id);
+    if (!deletedPerson) return res.status(404).json({ error: 'Person not found' });
+    res.json({ message: 'Person deleted' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Filter persons by firstName and/or surName
 router.post('/filter', async (req, res) => {
   try {
-    const { first_name, last_name } = req.body;
-    
-    // Build the query based on provided filters
-    let query = 'SELECT * FROM persons WHERE 1=1';
-    const params = [];
-    let paramCount = 1;
-
-    if (first_name) {
-      query += ` AND first_name ILIKE $${paramCount}`;
-      params.push(`%${first_name}%`);
-      paramCount++;
-    }
-
-    if (last_name) {
-      query += ` AND last_name ILIKE $${paramCount}`;
-      params.push(`%${last_name}%`);
-      paramCount++;
-    }
-
-    query += ' ORDER BY created_at DESC';
-
-    const result = await db.query(query, params);
-    res.json(result.rows);
-  } catch (error) {
-    console.error('Error filtering persons:', error);
-    res.status(500).json({ 
-      error: 'Failed to filter persons' 
-    });
-  }
-});
-
-// Insert new person
-router.post('/', async (req, res) => {
-  try {
-    const { first_name, last_name } = req.body;
-
-    // Validate input
-    if (!first_name || !last_name) {
-      return res.status(400).json({ 
-        error: 'First name and last name are required' 
-      });
-    }
-
-    // Insert person into database
-    const result = await db.query(
-      'INSERT INTO persons (first_name, last_name) VALUES ($1, $2) RETURNING *',
-      [first_name, last_name]
-    );
-
-    res.status(201).json(result.rows[0]);
-  } catch (error) {
-    console.error('Error inserting person:', error);
-    res.status(500).json({ 
-      error: 'Failed to insert person' 
-    });
+    const { firstName, surName } = req.body;
+    const filter = {};
+    if (firstName) filter.firstName = { $regex: firstName, $options: 'i' };
+    if (surName) filter.surName = { $regex: surName, $options: 'i' };
+    const persons = await Person.find(filter);
+    res.json(persons);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 
